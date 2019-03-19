@@ -10,7 +10,8 @@ LEARNING_RATE_DECAY = 0.99
 REGULARIZATION_RATE = 0.0001
 TRAINING_STEPS = 20000
 MOVING_AVERAGE_DECAY = 0.99
-MODEL_PATH = 'model/'
+DATA_PATH = "/tmp/mnist_data/"
+MODEL_PATH = '/tmp/model/'
 MODEL_NAME = 'model.ckpt'
 
 def train(mnist):
@@ -42,7 +43,7 @@ def train(mnist):
                 saver.save(sess, os.path.join(MODEL_PATH, MODEL_NAME), global_step=global_step)
 
 def main(_):
-    mnist = input_data.read_data_sets("mnist_data/", one_hot=True)
+    mnist = input_data.read_data_sets(DATA_PATH, one_hot=True)
     train(mnist)
 
 if __name__=="__main__":

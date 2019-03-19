@@ -7,6 +7,7 @@ import inference
 
 # Evaluate accuracy of new model every 10 sec
 EVAL_INTERVAL = 10
+DATA_PATH = "/tmp/mnist_data/"
 
 def evaluate(mnist):
     with tf.Graph().as_default() as g:
@@ -39,7 +40,7 @@ def evaluate(mnist):
                 time.sleep(EVAL_INTERVAL)
 
 def main(_):
-    mnist = input_data.read_data_sets("mnist_data/", one_hot=True)
+    mnist = input_data.read_data_sets(DATA_PATH, one_hot=True)
     evaluate(mnist)
 
 if __name__=='__main__':
