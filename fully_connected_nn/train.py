@@ -5,7 +5,7 @@ from tensorflow.examples.tutorials.mnist import input_data
 import inference
 
 BATCH_SIZE = 128
-LEARNING_RATE = 0.8
+LEARNING_RATE = 0.5
 LEARNING_RATE_DECAY = 0.99
 REGULARIZATION_RATE = 0.0001
 TRAINING_STEPS = 20000
@@ -21,16 +21,20 @@ def train(mnist):
     y = inference.inference(feature, regularizer)
 
     global_step = tf.Variable(0, trainable=False)
+    # Use moving average model
     variable_averages = tf.train.ExponentialMovingAverage(MOVING_AVERAGE_DECAY, global_step)
     variable_averages_op = variable_averages.apply(tf.trainable_variables())
+
     cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=tf.argmax(label, 1), logits=y)
     loss = tf.reduce_mean(cross_entropy) + tf.add_n(tf.get_collection("losses"))
+    # Use exponentially decaying learning rate
     learning_rate = tf.train.exponential_decay(LEARNING_RATE, global_step,
                                                mnist.train.num_examples / BATCH_SIZE,
                                                LEARNING_RATE_DECAY)
     train_step = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss, global_step=global_step)
     train_op = tf.group([train_step, variable_averages_op])
     saver = tf.train.Saver()
+
     with tf.Session() as sess:
         tf.initialize_all_variables().run()
         for i in range(TRAINING_STEPS):
@@ -40,6 +44,7 @@ def train(mnist):
 
             if i % 1000 == 0:
                 print("loss at step {}: {}".format(i, loss_value))
+                # Save training models every 1000 step
                 saver.save(sess, os.path.join(MODEL_PATH, MODEL_NAME), global_step=global_step)
 
 def main(_):

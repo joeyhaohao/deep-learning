@@ -5,7 +5,7 @@ from tensorflow.examples.tutorials.mnist import input_data
 import train
 import inference
 
-# Evaluate accuracy of new model every 10 sec
+# Evaluate accuracy of model every 10 sec
 EVAL_INTERVAL = 10
 DATA_PATH = "/tmp/mnist_data/"
 
@@ -16,7 +16,7 @@ def evaluate(mnist):
         y = inference.inference(feature, None)
         correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(label, 1))
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-        variable_averages = tf.train.ExponentialMovingAverage(train.MOVING_AVERAGE_DECAY)
+        # variable_averages = tf.train.ExponentialMovingAverage(train.MOVING_AVERAGE_DECAY)
         # variable_to_restore = variable_averages.variables_to_restore()
         saver = tf.train.Saver()
 
@@ -24,6 +24,7 @@ def evaluate(mnist):
             with tf.Session() as sess:
                 ckpt = tf.train.get_checkpoint_state(train.MODEL_PATH)
                 if ckpt and ckpt.model_checkpoint_path:
+                    # Load the newest model
                     saver.restore(sess, ckpt.model_checkpoint_path)
                     global_step = ckpt.model_checkpoint_path.split('/')[-1].split('-')[-1]
                     valid_acc = sess.run(accuracy,
