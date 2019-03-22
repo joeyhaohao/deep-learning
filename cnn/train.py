@@ -12,7 +12,7 @@ REGULARIZATION_RATE = 0.0001
 TRAINING_STEPS = 20000
 MOVING_AVERAGE_DECAY = 0.99
 DATA_PATH = "/tmp/mnist_data/"
-MODEL_PATH = '/tmp/model/'
+MODEL_PATH = '/tmp/LeNet-5/'
 MODEL_NAME = 'model.ckpt'
 
 def train(mnist):
