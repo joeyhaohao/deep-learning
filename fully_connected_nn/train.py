@@ -16,6 +16,12 @@ LOG_PATH = '/tmp/log/'
 MODEL_NAME = 'model.ckpt'
 
 def train(mnist):
+    if tf.io.gfile.exists(LOG_PATH):
+        tf.compat.v1.logging.warning(
+            'Warning: deleting old log directory at {}'.format(LOG_PATH))
+        tf.io.gfile.rmtree(LOG_PATH)
+    tf.io.gfile.makedirs(LOG_PATH)
+
     with tf.name_scope("input"):
         feature = tf.placeholder(tf.float32, [None, inference.INPUT_SIZE], name="feature")
         label = tf.placeholder(tf.float32, [None, inference.OUTPUT_SIZE], name="label")
